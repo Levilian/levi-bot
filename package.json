@@ -1,6 +1,6 @@
 {
-  "name": "ai-chatgpt",
-  "repository": "https://github.com/vercel/examples.git",
+  "name": "levi-bot",
+  "repository": "https://github.com/Levilian/levi-bot.git",
   "license": "MIT",
   "private": true,
   "scripts": {
