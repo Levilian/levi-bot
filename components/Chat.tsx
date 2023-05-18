@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Button } from './Button'
-import { type ChatGPTMessage, ChatLine, LoadingChatLine } from './ChatLine'
+import { ChatLine, LoadingChatLine, ChatMessage } from './ChatLine'
 import { useCookies } from 'react-cookie'
 
 const COOKIE_NAME = 'nextjs-example-ai-chat-gpt3'
 
 // default first message to display in UI (not necessary to define the prompt)
-export const initialMessages: ChatGPTMessage[] = [
+export const initialMessages: ChatMessage[] = [
   {
-    role: 'assistant',
-    content: 'Hi! I am a friendly AI assistant. Ask me anything!',
+    role: 'levi',
+    prompt: 'Hi! I\'m a chatbot trained on thousands of Levi\'s messages. \n See if you can recognize me!',
   },
 ]
 
@@ -39,13 +39,13 @@ const InputMessage = ({ input, setInput, sendMessage }: any) => (
         setInput('')
       }}
     >
-      Say
+      Send
     </Button>
   </div>
 )
 
 export function Chat() {
-  const [messages, setMessages] = useState<ChatGPTMessage[]>(initialMessages)
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [cookie, setCookie] = useCookies([COOKIE_NAME])
@@ -58,15 +58,14 @@ export function Chat() {
     }
   }, [cookie, setCookie])
 
-  // send message to API /api/chat endpoint
-  const sendMessage = async (message: string) => {
+  // send prompt to API /api/chat endpoint
+  const sendMessage = async (prompt: string) => {
     setLoading(true)
     const newMessages = [
       ...messages,
-      { role: 'user', content: message } as ChatGPTMessage,
+      { role: 'user', prompt: prompt } as ChatMessage,
     ]
     setMessages(newMessages)
-    const last10messages = newMessages.slice(-10) // remember last 10 messages
 
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -74,7 +73,7 @@ export function Chat() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        messages: last10messages,
+        prompt: prompt + '\n\n===\n\n',
         user: cookie[COOKIE_NAME],
       }),
     })
@@ -103,10 +102,10 @@ export function Chat() {
       const chunkValue = decoder.decode(value)
 
       lastMessage = lastMessage + chunkValue
-
+      console.log('lastMessage: ', lastMessage)
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: lastMessage } as ChatGPTMessage,
+        { role: 'levi', prompt: lastMessage } as ChatMessage,
       ])
 
       setLoading(false)
@@ -115,8 +114,8 @@ export function Chat() {
 
   return (
     <div className="rounded-2xl border-zinc-100  lg:border lg:p-6">
-      {messages.map(({ content, role }, index) => (
-        <ChatLine key={index} role={role} content={content} />
+      {messages.map(({ prompt, role }, index) => (
+        <ChatLine key={index} role={role} prompt={prompt} />
       ))}
 
       {loading && <LoadingChatLine />}

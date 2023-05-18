@@ -4,11 +4,11 @@ import Balancer from 'react-wrap-balancer'
 // wrap Balancer to remove type errors :( - @TODO - fix this ugly hack
 const BalancerWrapper = (props: any) => <Balancer {...props} />
 
-type ChatGPTAgent = 'user' | 'system' | 'assistant'
+type Agent = 'user' | 'levi'
 
-export interface ChatGPTMessage {
-  role: ChatGPTAgent
-  content: string
+export interface ChatMessage {
+  role: Agent
+  prompt: string
 }
 
 // loading placeholder animation for the chat line
@@ -18,7 +18,7 @@ export const LoadingChatLine = () => (
       <div className="min-w-0 flex-1">
         <p className="font-large text-xxl text-gray-900">
           <a href="#" className="hover:underline">
-            AI
+            Levi Bot
           </a>
         </p>
         <div className="space-y-4 pt-4">
@@ -42,16 +42,16 @@ const convertNewLines = (text: string) =>
     </span>
   ))
 
-export function ChatLine({ role = 'assistant', content }: ChatGPTMessage) {
-  if (!content) {
+export function ChatLine({ role = 'levi', prompt }: ChatMessage) {
+  if (!prompt) {
     return null
   }
-  const formatteMessage = convertNewLines(content)
+  const formatteMessage = convertNewLines(prompt)
 
   return (
     <div
       className={
-        role != 'assistant' ? 'float-right clear-both' : 'float-left clear-both'
+        role != 'levi' ? 'float-right clear-both' : 'float-left clear-both'
       }
     >
       <BalancerWrapper>
@@ -60,13 +60,13 @@ export function ChatLine({ role = 'assistant', content }: ChatGPTMessage) {
             <div className="flex-1 gap-4">
               <p className="font-large text-xxl text-gray-900">
                 <a href="#" className="hover:underline">
-                  {role == 'assistant' ? 'AI' : 'You'}
+                  {role == 'levi' ? 'Levi Bot' : 'You'}
                 </a>
               </p>
               <p
                 className={clsx(
                   'text ',
-                  role == 'assistant' ? 'font-semibold font- ' : 'text-gray-400'
+                  role == 'levi' ? 'font-semibold font- ' : 'text-gray-400'
                 )}
               >
                 {formatteMessage}
