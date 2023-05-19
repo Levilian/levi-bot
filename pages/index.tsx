@@ -8,8 +8,8 @@ function Home() {
         <Text variant="h1" >Levi talking style chatbot</Text>
         <hr className='w-full h-1 mt-2 mb-4 border-0 border-t border-gray-400' />
         <h1 className='block pl-1 text-sm tracking-tight text-gray-700'>
-           Disclaimer: Although the Levi chatbot is fine-tuned on Levi's real chat history, it doesn't know anything about Levi nor real people in his life.
-           There's zero factual basis for the things it says. It could also produce harmful content given it's trained on a base language model. 
+           Disclaimer: Although the Levi chatbot is fine-tuned on Levi&apos;s real chat history, it doesn&apos;t know anything about Levi nor real people in his life.
+           There&apos;s zero factual basis for the things it says. It could also produce harmful content given it&apos;s trained on a base language model. 
         </h1>
         <Chat />
       </section>
