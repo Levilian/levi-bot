@@ -1,5 +1,9 @@
 # Levi Bot
 
+### What's New
+- Fine-tuned model on davinci
+- Preprocessing code linked elsewhere to process Messenger and Instagram JSON data
+
 ### Components
 
 - Next.js
