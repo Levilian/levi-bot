@@ -3,7 +3,7 @@ import { Button } from './Button'
 import { ChatLine, LoadingChatLine, ChatMessage } from './ChatLine'
 import { useCookies } from 'react-cookie'
 
-const COOKIE_NAME = 'nextjs-example-ai-chat-gpt3'
+const COOKIE_NAME = 'levi-chat-bot'
 
 // default first message to display in UI (not necessary to define the prompt)
 export const initialMessages: ChatMessage[] = [
@@ -14,7 +14,7 @@ export const initialMessages: ChatMessage[] = [
 ]
 
 const InputMessage = ({ input, setInput, sendMessage }: any) => (
-  <div className="mt-6 flex clear-both">
+  <div className="clear-both mt-6 flex">
     <input
       type="text"
       aria-label="chat input"
@@ -23,6 +23,7 @@ const InputMessage = ({ input, setInput, sendMessage }: any) => (
       value={input}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
+          e.preventDefault()
           sendMessage(input)
           setInput('')
         }
@@ -33,7 +34,7 @@ const InputMessage = ({ input, setInput, sendMessage }: any) => (
     />
     <Button
       type="submit"
-      className="ml-4 flex-none"
+      className="flex-none ml-4"
       onClick={() => {
         sendMessage(input)
         setInput('')
@@ -102,7 +103,7 @@ export function Chat() {
       const chunkValue = decoder.decode(value)
 
       lastMessage = lastMessage + chunkValue
-      console.log('lastMessage: ', lastMessage)
+      
       setMessages([
         ...newMessages,
         { role: 'levi', prompt: lastMessage } as ChatMessage,
@@ -113,12 +114,14 @@ export function Chat() {
   }
 
   return (
-    <div className="rounded-2xl border-zinc-100  lg:border lg:p-6">
-      {messages.map(({ prompt, role }, index) => (
-        <ChatLine key={index} role={role} prompt={prompt} />
-      ))}
+    <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-2xl border-zinc-200 lg:border lg:p-6">
+      <div className="h-full overflow-auto px-4">
+        {messages.map(({ prompt, role }, index) => (
+          <ChatLine key={index} role={role} prompt={prompt} />
+        ))}
 
-      {loading && <LoadingChatLine />}
+        {loading && <LoadingChatLine />}
+      </div>
 
       {messages.length < 2 && (
         <span className="mx-auto flex flex-grow text-gray-600 clear-both">

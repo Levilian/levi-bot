@@ -1,8 +1,4 @@
 import clsx from 'clsx'
-import Balancer from 'react-wrap-balancer'
-
-// wrap Balancer to remove type errors :( - @TODO - fix this ugly hack
-const BalancerWrapper = (props: any) => <Balancer {...props} />
 
 type Agent = 'user' | 'levi'
 
@@ -13,14 +9,9 @@ export interface ChatMessage {
 
 // loading placeholder animation for the chat line
 export const LoadingChatLine = () => (
-  <div className="flex min-w-full animate-pulse px-4 py-5 sm:px-6">
+  <div className="flex min-w-full animate-pulse px-4 py-4 sm:px-6">
     <div className="flex flex-grow space-x-3">
       <div className="min-w-0 flex-1">
-        <p className="font-large text-xxl text-gray-900">
-          <a href="#" className="hover:underline">
-            Levi Bot
-          </a>
-        </p>
         <div className="space-y-4 pt-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2 h-2 rounded bg-zinc-500"></div>
@@ -33,7 +24,7 @@ export const LoadingChatLine = () => (
   </div>
 )
 
-// util helper to convert new lines to <br /> tags
+// util helper to convert new lines to <br />
 const convertNewLines = (text: string) =>
   text.split('\n').map((line, i) => (
     <span key={i}>
@@ -46,7 +37,7 @@ export function ChatLine({ role = 'levi', prompt }: ChatMessage) {
   if (!prompt) {
     return null
   }
-  const formatteMessage = convertNewLines(prompt)
+  const formattedMessage = convertNewLines(prompt)
 
   return (
     <div
@@ -54,27 +45,23 @@ export function ChatLine({ role = 'levi', prompt }: ChatMessage) {
         role != 'levi' ? 'float-right clear-both' : 'float-left clear-both'
       }
     >
-      <BalancerWrapper>
-        <div className="float-right mb-5 rounded-lg bg-white px-4 py-5 shadow-lg ring-1 ring-zinc-100 sm:px-6">
+        <div className={"float-right mb-4 rounded-lg px-4 py-4 shadow-lg ring-1 ring-zinc-100 sm:px-6" + clsx(
+                  'text ',
+                  role == 'levi' ? 'bg-gray-100' : 'bg-indigo-500'
+                )}>
           <div className="flex space-x-3">
-            <div className="flex-1 gap-4">
-              <p className="font-large text-xxl text-gray-900">
-                <a href="#" className="hover:underline">
-                  {role == 'levi' ? 'Levi Bot' : 'You'}
-                </a>
-              </p>
+            <div className='flex-1 gap-4'>
               <p
                 className={clsx(
                   'text ',
-                  role == 'levi' ? 'font-semibold font- ' : 'text-gray-400'
+                  role == 'levi' ? 'font- font-semibold' : 'text-white font-semibold'
                 )}
               >
-                {formatteMessage}
+                {formattedMessage}
               </p>
             </div>
           </div>
         </div>
-      </BalancerWrapper>
     </div>
   )
 }
