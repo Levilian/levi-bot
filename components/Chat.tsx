@@ -20,7 +20,7 @@ const InputMessage = ({ input, setInput, sendMessage }: any) => (
       aria-label="chat input"
       required
       className="min-w-0 flex-auto appearance-none rounded-md border border-zinc-900/10 bg-white px-3 py-[calc(theme(spacing.2)-1px)] shadow-md shadow-zinc-800/5 placeholder:text-zinc-400 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 sm:text-sm"
-      placeholder="Type your message... For example, are you Levi from the Attack on Titan anime?"
+      placeholder="Type your message..."
       value={input}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
