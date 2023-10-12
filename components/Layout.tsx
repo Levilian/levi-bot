@@ -10,7 +10,7 @@ export default function Layout({ children }: LayoutProps) {
     <div>
       <Head>
         <title>
-          Levi Bot: Talks like Levi but Knows Nothing About Him
+          Levi Bot: Mimicking Levi&apos;s Talking Style
         </title>
         <meta
           name="description"

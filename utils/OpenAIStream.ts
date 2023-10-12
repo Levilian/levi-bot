@@ -4,7 +4,7 @@ import {
   ReconnectInterval,
 } from 'eventsource-parser'
 
-export type Agent = 'user' | 'levi'
+type Agent = 'user' | 'assistant' | 'system'
 
 export interface ChatMessage {
   role: Agent
@@ -13,14 +13,10 @@ export interface ChatMessage {
 
 export interface OpenAIStreamPayload {
   model: string
-  prompt: string
+  messages: ChatMessage[]
   temperature: number
-  top_p: number
-  frequency_penalty: number
-  presence_penalty: number
   max_tokens: number
   stream: boolean
-  stop?: string[]
   user?: string
 }
 
@@ -39,7 +35,7 @@ export async function OpenAIStream(payload: OpenAIStreamPayload) {
     requestHeaders['OpenAI-Organization'] = process.env.OPENAI_API_ORG
   }
 
-  const res = await fetch('https://api.openai.com/v1/completions', {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
     headers: requestHeaders,
     method: 'POST',
     body: JSON.stringify(payload),

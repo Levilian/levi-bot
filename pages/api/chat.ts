@@ -1,33 +1,37 @@
-import { type OpenAIStreamPayload, OpenAIStream } from '../../utils/OpenAIStream'
+// import { type OpenAIStreamPayload, OpenAIStream } from '../../utils/OpenAIStream'
+import OpenAI from 'openai';
+import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 // break the app if the API key is missing
 if (!process.env.OPENAI_API_KEY) {
   throw new Error('Missing Environment Variable OPENAI_API_KEY')
 }
 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 export const config = {
   runtime: 'edge',
 }
 
-const handler = async (req: Request): Promise<Response> => {
+const handler = async (req: Request) => {
   const body = await req.json()
 
-  const payload: OpenAIStreamPayload = {
-    model: process.env.AI_MODEL || 'gpt-3.5-turbo',
-    prompt: body?.prompt || '',
-    temperature: process.env.AI_TEMP ? parseFloat(process.env.AI_TEMP) : 0.7,
-    max_tokens: process.env.AI_MAX_TOKENS
+  const payload = {
+      model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+      messages: body?.messages,
+      temperature: process.env.AI_TEMP ? parseFloat(process.env.AI_TEMP) : 0.9,
+      max_tokens: process.env.AI_MAX_TOKENS
       ? parseInt(process.env.AI_MAX_TOKENS)
-      : 100,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    stream: true,
-    stop: ['\n###'],
-    user: body?.user,
+      : 500,
+      stream: true,
+      user: body?.user,
   }
 
-  const stream = await OpenAIStream(payload)
-  return new Response(stream)
+  const response = await openai.chat.completions.create(payload)
+  const stream = OpenAIStream(response)
+
+  return new StreamingTextResponse(stream, {type: "bytes"})
 }
 export default handler

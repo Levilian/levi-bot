@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 
-type Agent = 'user' | 'levi'
+type Agent = 'user' | 'assistant' | 'system'
 
 export interface ChatMessage {
   role: Agent
-  prompt: string
+  content: string
 }
 
 // loading placeholder animation for the chat line
@@ -33,28 +33,28 @@ const convertNewLines = (text: string) =>
     </span>
   ))
 
-export function ChatLine({ role = 'levi', prompt }: ChatMessage) {
-  if (!prompt) {
+export function ChatLine({ role = 'assistant', content }: ChatMessage) {
+  if (!content) {
     return null
   }
-  const formattedMessage = convertNewLines(prompt)
+  const formattedMessage = convertNewLines(content)
 
   return (
     <div
       className={
-        role != 'levi' ? 'float-right clear-both' : 'float-left clear-both'
+        role != 'assistant' ? 'float-right clear-both' : 'float-left clear-both'
       }
     >
         <div className={"float-right mb-4 rounded-lg px-4 py-4 shadow-lg ring-1 ring-zinc-100 sm:px-6" + clsx(
                   'text ',
-                  role == 'levi' ? 'bg-gray-100' : 'bg-indigo-500'
+                  role == 'assistant' ? 'bg-gray-100' : 'bg-indigo-500'
                 )}>
           <div className="flex space-x-3">
             <div className='flex-1 gap-4'>
               <p
                 className={clsx(
                   'text ',
-                  role == 'levi' ? 'font- font-semibold' : 'text-white font-semibold'
+                  role == 'assistant' ? 'font- font-semibold' : 'text-white font-semibold'
                 )}
               >
                 {formattedMessage}

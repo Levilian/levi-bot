@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
+import { useChat, type Message } from 'ai/react'
 import { Button } from './Button'
 import { ChatLine, LoadingChatLine, ChatMessage } from './ChatLine'
 import { useCookies } from 'react-cookie'
+// import { toast } from 'react-hot-toast'
 
 const COOKIE_NAME = 'levi-chat-bot'
 
 // default first message to display in UI (not necessary to define the prompt)
 export const initialMessages: ChatMessage[] = [
-  {
-    role: 'levi',
-    prompt: 'Hi! I\'m a chatbot trained on thousands of Levi\'s messages. \n See if you can recognize me!',
+  { role:'system',
+    content: "You are levi. Reply just as levi would. Don't say offensive or harmful things. Pay attention to the previous conversation."
   },
+  // {
+  //   role: 'assistant',
+  //   content: "Hi! I\'m a chatbot trained on Levi\'s IG messages. \n Talk to me as if I\'m Levi.",
+  // },
 ]
 
 const InputMessage = ({ input, setInput, sendMessage }: any) => (
@@ -60,26 +65,44 @@ export function Chat() {
     }
   }, [cookie, setCookie])
 
-  // send prompt to API /api/chat endpoint
-  const sendMessage = async (prompt: string) => {
+  const sendMessage = async (content: string) => {
     setLoading(true)
     const newMessages = [
       ...messages,
-      { role: 'user', prompt: prompt } as ChatMessage,
+      { role: 'user', content: content } as ChatMessage,
     ]
+    console.log(newMessages)
     setMessages(newMessages)
+    
+    // let payload: OpenAIPayload = {
+    //   model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+    //   messages: messages,
+    //   temperature: 0.8,
+    //   max_tokens: 1024,
+    //   stream: true,
+    //   user: cookie[COOKIE_NAME],
+    // }
 
+    // const completion = await openai.chat.completions.create(payload);
+
+    // let lastMessage = ''
+    // for await (const chunk of completion) {
+    //   lastMessage = lastMessage + chunk.choices[0]?.delta?.content || ''
+      
+    //   setMessages([
+    //     ...newMessages,
+    //     { role: 'assistant', content: lastMessage } as ChatMessage,
+    //   ])
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify({
-        prompt: prompt + '\n\n===\n\n',
+        messages: newMessages,
         user: cookie[COOKIE_NAME],
       }),
     })
-
     console.log('Edge function returned.')
 
     if (!response.ok) {
@@ -91,34 +114,31 @@ export function Chat() {
     if (!data) {
       return
     }
-
-    const reader = data.getReader()
-    const decoder = new TextDecoder()
+    const reader = data.getReader()    
+    const decoder = new TextDecoder('utf-8')
     let done = false
-
     let lastMessage = ''
 
     while (!done) {
       const { value, done: doneReading } = await reader.read()
+      console.log(value)
       done = doneReading
       const chunkValue = decoder.decode(value)
-
       lastMessage = lastMessage + chunkValue
-      
-      setMessages([
-        ...newMessages,
-        { role: 'levi', prompt: lastMessage } as ChatMessage,
-      ])
 
       setLoading(false)
+      setMessages([
+        ...newMessages,
+        { role: 'assistant', content: lastMessage } as ChatMessage,
+      ])
     }
   }
 
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-2xl border-zinc-200 lg:border lg:p-6">
       <div className="h-full overflow-auto px-4">
-        {messages.map(({ prompt, role }, index) => (
-          <ChatLine key={index} role={role} prompt={prompt} />
+        {messages.map(({ content, role }, index) => (
+          <ChatLine key={index} role={role} content={content} />
         ))}
 
         {loading && <LoadingChatLine />}
