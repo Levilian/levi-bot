@@ -32,6 +32,6 @@ const handler = async (req: Request) => {
   const response = await openai.chat.completions.create(payload)
   const stream = OpenAIStream(response)
 
-  return new StreamingTextResponse(stream, {type: "bytes"})
+  return new StreamingTextResponse(stream)
 }
 export default handler

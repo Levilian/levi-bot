@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useChat, type Message } from 'ai/react'
 import { Button } from './Button'
 import { ChatLine, LoadingChatLine, ChatMessage } from './ChatLine'
 import { useCookies } from 'react-cookie'
@@ -71,7 +70,7 @@ export function Chat() {
       ...messages,
       { role: 'user', content: content } as ChatMessage,
     ]
-    console.log(newMessages)
+
     setMessages(newMessages)
     
     // let payload: OpenAIPayload = {
@@ -121,7 +120,7 @@ export function Chat() {
 
     while (!done) {
       const { value, done: doneReading } = await reader.read()
-      console.log(value)
+
       done = doneReading
       const chunkValue = decoder.decode(value)
       lastMessage = lastMessage + chunkValue
@@ -137,7 +136,8 @@ export function Chat() {
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-2xl border-zinc-200 lg:border lg:p-6">
       <div className="h-full overflow-auto px-4">
-        {messages.map(({ content, role }, index) => (
+        <ChatLine key={0} role={'assistant'} content={'talk to me about anything!'} />
+        {messages.slice(1).map(({ content, role }, index) => (
           <ChatLine key={index} role={role} content={content} />
         ))}
 
