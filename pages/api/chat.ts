@@ -1,5 +1,6 @@
 // import { type OpenAIStreamPayload, OpenAIStream } from '../../utils/OpenAIStream'
 import OpenAI from 'openai';
+
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 // break the app if the API key is missing
@@ -15,7 +16,7 @@ export const config = {
   runtime: 'edge',
 }
 
-const handler = async (req: Request) => {
+const handler = async (req: Request): Promise<Response> => {
   const body = await req.json()
 
   const payload = {
@@ -29,9 +30,8 @@ const handler = async (req: Request) => {
       user: body?.user,
   }
 
-  const response = await openai.chat.completions.create(payload)
+  const response = await openai.chat.completions.create(payload).asResponse()
   const stream = OpenAIStream(response)
-
   return new StreamingTextResponse(stream)
 }
 export default handler
