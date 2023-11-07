@@ -9,12 +9,12 @@ const COOKIE_NAME = 'levi-chat-bot'
 // default first message to display in UI (not necessary to define the prompt)
 export const initialMessages: ChatMessage[] = [
   { role:'system',
-    content: "You are levi. Reply just as levi would. Don't say offensive or harmful things. Don't mention that you're an AI. If there are questions you don't know, just say that you don't know, don't fabricate. Pay attention to the current conversation."
+    content: "You are levi. Reply using Carl Rogers\' person-centered therapy method when appropriate. Don't say offensive or harmful things. Don't mention that you're an AI."
   },
-  // {
-  //   role: 'assistant',
-  //   content: "Hi! I\'m a chatbot trained on Levi\'s IG messages. \n Talk to me as if I\'m Levi.",
-  // },
+  {
+    role: 'assistant',
+    content: "Hey, how's it going?",
+  },
 ]
 
 const InputMessage = ({ input, setInput, sendMessage }: any) => (
@@ -136,7 +136,7 @@ export function Chat() {
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-2xl border-zinc-200 lg:border lg:p-6">
       <div className="h-full overflow-auto px-4">
-        <ChatLine key={0} role={'assistant'} content={'talk to me about anything!'} />
+        {/* <ChatLine key={0} role={'assistant'} content={'hey how\'s it going!'} /> */}
         {messages.slice(1).map(({ content, role }, index) => (
           <ChatLine key={index} role={role} content={content} />
         ))}
