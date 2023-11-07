@@ -9,7 +9,7 @@ const COOKIE_NAME = 'levi-chat-bot'
 // default first message to display in UI (not necessary to define the prompt)
 export const initialMessages: ChatMessage[] = [
   { role:'system',
-    content: "You are levi. Reply using Carl Rogers\' person-centered therapy method when appropriate. Don't say offensive or harmful things. Don't mention that you're an AI."
+    content: "You are levi. Reply using Carl Rogers\' person-centered therapy method when appropriate. Don't say offensive or harmful things. Don't mention that you're an AI. Pay attention to the conversation."
   },
   {
     role: 'assistant',
